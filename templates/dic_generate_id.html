@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIC System</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> 
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+      h2, p, button, label {
+        font-family: 'Inter', sans-serif;
+        color: white;
+      }
+    </style> 
+</head>
+<body>
+  <div class="w3-display-container w3-text-white">
+    <img class="w3-image" src="/static/backgrounds/{{school_name}}/{{school_name}}.png">
+      <div class="w3-padding w3-display-middle w3-large">
+        <div class="w3-card-4 w3-round"  style="background-color: white;">
+            <div class="w3-container w3-brown">
+              <center>
+              <h2>{{school_name}}</h2>
+              </center>
+            </div>
+
+            {% if error %}
+              <div class="w3-container w3-pale-red">
+                <center>
+                    <span>Error: {{error}}</span>
+                </center>
+              </div>
+            {% endif %}
+
+            {% if success %}
+              <div class="w3-container w3-green">
+                <center>
+                    <span>{{success}}</span>
+                </center>
+              </div>
+            {% endif %}
+
+            <p> 
+                <form class="w3-container" action="/DIC/generate_id/" method="post">
+                    <input type="hidden" name="school_name" value="{{school_name}}">  
+
+                    <label class="w3-text-brown">Enter ID Number:</label>
+                    <input class="w3-input w3-border w3-sand w3-round" name="id_num" type="text" value="{{id_num}}" required></p>
+                    
+                    <label class="w3-text-brown">Enter Course:</label>
+                    <input class="w3-input w3-border w3-sand w3-round" name="course" type="text" value="{{course}}" required></p>
+
+                    <p class="w3-center w3-large">
+                      <input class="w3-radio" type="radio" name="person_type" value="students" checked>
+                      <label class="w3-text-brown">Student</label>
+                      <input class="w3-radio" type="radio" name="person_type" value="professors" disabled>
+                      <label class="w3-text-gray">Professor</label>
+                    </p>
+
+                    <input class="w3-btn w3-light-grey w3-left w3-margin-bottom w3-round" type="button" onclick="location.href='/DIC/logout/';" value="LOGOUT"/>
+                    <button class="w3-btn w3-brown w3-right w3-margin-bottom w3-round">GENERATE</button>
+                
+                </form>
+
+                <!-- <form action="/DIC/logout/" method="post">
+                    <button class="w3-btn w3-brown w3-left w3-margin-bottom w3-round">LOGOUT</button>
+                </form> -->
+            </p>
+          </div>
+      </div>
+  </div>
+</body>
+</html>

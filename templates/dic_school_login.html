@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIC System</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> 
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+      h2, p, button, label {
+        font-family: 'Inter', sans-serif;
+        color: white;
+      }
+    </style> 
+</head>
+<body>
+  <div class="w3-display-container w3-text-white">
+    <img src="/static/backgrounds/index/index.jpg">
+      <div class="w3-padding w3-display-middle w3-large">
+        <div class="w3-card-4 w3-round"  style="background-color: white;">
+            <div class="w3-container w3-brown">
+              <center>
+              <h2>DIC System</h2>
+              </center>
+            </div>
+
+            {% if error %}
+              <div class="w3-container w3-pale-red">
+                <center>
+                    <span>Error: {{error}}</span>
+                </center>
+              </div>
+            {% endif %}
+
+            <form class="w3-container" action="/DIC/login/" method="POST">
+              <p>      
+                <label class="w3-text-brown">Enter School Name:</label>
+                <input class="w3-input w3-border w3-sand w3-round" name="school_name" type="text" value="{{school_name}}"></p>
+                <button class="w3-btn w3-brown w3-right w3-margin-bottom w3-round">Login</button>
+              </p>
+            </form>
+
+          </div>
+      </div>
+  </div>
+</body>
+</html>
