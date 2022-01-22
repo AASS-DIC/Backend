@@ -3,3 +3,5 @@
 /env
 /private
 /test
+poetry.lock
+pyproject.toml
