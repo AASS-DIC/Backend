@@ -40,6 +40,7 @@ try:
     firebase_database_url = os.environ['firebase_database_url']
 except KeyError:
     print(f"{Fore.RED}firebase_database_url not present in environ vars, please add.{Style.RESET_ALL}")
+    quit()
 
 # Initialize the app with a service account, granting admin privileges
 firebase_admin.initialize_app(cred, {
