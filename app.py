@@ -2,6 +2,7 @@ import os
 import json
 import ujson
 from datetime import datetime
+import requests
 from student_data_list import *
 from dic import *
 from errors import *
@@ -16,21 +17,31 @@ from firebase_admin import credentials, db
 
 # Fetch the service account key JSON file contents or OS environ variable
 try:
-    cred = credentials.Certificate('private/aass-temp-database-firebase-adminsdk-uwjsh-893b46b46b.json')
+    cred = credentials.Certificate('private/aass-temp-firebase-service_account.json')
     print("Successfully loaded credentials from JSON file.")
 except:
     cred = credentials.Certificate({
+        "type": os.environ.get('type'),
         "project_id": os.environ.get('project_id'),
+        "private_key_id": os.environ.get('private_key_id'),
         "private_key": os.environ.get('private_key'),
         "client_email": os.environ.get('client_email'),
-        "token_uri": os.environ.get('token_uri')
+        'client_id': os.environ.get('client_id'),
+        'auth_uri': os.environ.get('auth_uri'),
+        "token_uri": os.environ.get('token_uri'),
+        'auth_provider_x509_cert_url': os.environ.get('auth_provider_x509_cert_url'),
+        "client_x509_cert_url": os.environ.get("client_x509_cert_url")
     })
+    print("WARN: Firebase JSON Service Account is not found")
     print("Successfully loaded credentials from environment variables.")
 
 # Initialize the app with a service account, granting admin privileges
 firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://aass-temp-database-default-rtdb.asia-southeast1.firebasedatabase.app/'
 })
+
+
+firebase_database_url = os.environ['firebase_database_url']
 
 
 app = Flask(__name__)
@@ -51,6 +62,20 @@ def find_person_in_database(school_to_find, person_type_to_find, id_num_to_find)
             return {id_num: people[id_num]}
 
     return False
+
+
+def find_school_in_database_shallow(school_to_find):
+    url = firebase_database_url + '/schools.json?shallow=true'
+    response = requests.get(url)
+    # print(f"{response}")
+    # print(response.json())
+    schools = dict(response.json())
+    if school_to_find in schools:
+        return True
+    else:
+        return False
+
+
 
 
 def find_school_in_database(school_to_find):
@@ -96,11 +121,17 @@ def verify_person():
 
 def verify_school():
     school_to_verify = request.args.get('school')
-    school_data = find_school_in_database(school_to_verify)
+    shallow = request.args.get('shallow')
+
     print(f"Verifying if '{school_to_verify}' exists")
 
+    if shallow == 'true':
+        school_data = school_to_verify  # content in JSON return, returns the school name instead of the school name and its content
+    else:
+        school_data = find_school_in_database(school_to_verify)
+    
     if school_data != False:
-        return found_school(school_to_verify, school_to_verify)
+        return found_school(school_to_verify, school_data)
 
     return school_not_found(school_to_verify)
 

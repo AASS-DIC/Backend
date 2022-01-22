@@ -29,7 +29,7 @@ def person_info_incomplete(person_type, required_person_data_list, person_data):
     print("received data:")
     pprint(person_data)
     return {
-        "success": "false",
+        "success": False,
         "message": f"{person_type[0:-1].title()} information incomplete.",
         "required data": required_person_data_list,
         "received data": person_data
