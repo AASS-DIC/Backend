@@ -7,6 +7,7 @@ from student_data_list import *
 from dic import *
 from errors import *
 from successes import *
+from colorama import Fore, Style
 import qrcode
 import qrcode.image.svg
 from pprint import pprint
@@ -18,7 +19,8 @@ from firebase_admin import credentials, db
 # Fetch the service account key JSON file contents or OS environ variable
 try:
     cred = credentials.Certificate('private/aass-temp-firebase-service_account.json')
-    print("Successfully loaded credentials from JSON file.")
+    print(f"{Fore.GREEN}Successfully loaded credentials from JSON file.{Style.RESET_ALL}")
+    print(f"{Fore.YELLOW}WARN: You shouldn't be using JSON cred file to authenticate.\nIt is recommended to store them as environment variables instead.{Style.RESET_ALL}")
 except:
     cred = credentials.Certificate({
         "type": os.environ.get('type'),
@@ -32,19 +34,21 @@ except:
         'auth_provider_x509_cert_url': os.environ.get('auth_provider_x509_cert_url'),
         "client_x509_cert_url": os.environ.get("client_x509_cert_url")
     })
-    print("WARN: Firebase JSON Service Account is not found")
-    print("Successfully loaded credentials from environment variables.")
+    print(f"{Fore.GREEN}Successfully loaded credentials from environment variables.{Style.RESET_ALL}")
+
+try:
+    firebase_database_url = os.environ['firebase_database_url']
+except KeyError:
+    print(f"{Fore.RED}firebase_database_url not present in environ vars, please add.{Style.RESET_ALL}")
 
 # Initialize the app with a service account, granting admin privileges
 firebase_admin.initialize_app(cred, {
-    'databaseURL': 'https://aass-temp-database-default-rtdb.asia-southeast1.firebasedatabase.app/'
+    'databaseURL': firebase_database_url
 })
 
 
-firebase_database_url = os.environ['firebase_database_url']
-
-
 app = Flask(__name__)
+
 
 def api_not_found(e):
     return error("The requested resource was not found", 404)
