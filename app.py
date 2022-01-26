@@ -259,8 +259,11 @@ def generate_qrcode_data():
     if person_data == False:
         return person_not_found_in_school(school, person_type, id_num)
     else:
+        person_data = person_data[id_num]
+        person_data = str(minify_json(person_data))
+        print(person_data)
         print(f"Successfully generated QR Code for {person_type[0:-1].title()} '{id_num}' of '{school}' ")
-        return send_file(generate_qrcode_img(data=person_data[id_num], filename_description=f"{person_type[0:-1].title()}_{id_num}_{school}", image_format=image_format))
+        return send_file(generate_qrcode_img(data=person_data, filename_description=f"{person_type[0:-1].title()}_{id_num}_{school}", image_format=image_format))
 
     
 def update_person():
